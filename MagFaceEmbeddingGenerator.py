@@ -12,6 +12,8 @@ import iresnet
 from config import config
 from uuid import uuid1
 
+from utils import Reader
+
 class MagFaceEmbeddingGenerator:
     def __init__(self, embedding_size=512):
         self.transforms = transforms.Compose([

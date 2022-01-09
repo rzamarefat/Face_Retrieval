@@ -3,6 +3,7 @@ import os
 from sklearn_extra.cluster import KMedoids
 import numpy as np
 from config import config
+import cv2
 
 class Clustering:
     def __init__(self, k=3, type="kmedoids", save_mode="True"):
@@ -25,7 +26,7 @@ class Reader:
     def __init__(self):
         """
         * This class is to encapsulate all the utils which are useful (now or later) for reading data
-        * No matter what is the type of data the parent path should satisfy the following structure:
+        * No matter what is the type of data the parent path to the data should satisfy the following structure:
         -Parent/Path/To/Data
             -Class A
             -Class B
@@ -34,28 +35,55 @@ class Reader:
         """
         pass
             
-    def read_images_path(self, parent_path):
+    def read_path(self, parent_path):
         classes = []
-        images_path = []
+        data_path = []
 
-        for img_file in sorted(glob(os.path.join(parent_path, "*", "*"))):
-            classes.append(img_file.split("/")[-2])
-            images_path.append(img_file)
+        for data in sorted(glob(os.path.join(parent_path, "*", "*"))):
+            classes.append(data.split("/")[-2])
+            data_path.append(data)
 
 
-        return zip(classes, images_path)
+        return zip(classes, data_path)
+
+    def read_npy(self, abs_path):
+        with open(abs_path, "rb") as handle:
+            data = np.load(handle, allow_pickle=True)
+        
+        return data
 
         
 
 if __name__ == "__main__":
 
-    clustering = Clustering()
+    clustering = Clustering(k=3)
     
     reader = Reader()
-    path_data = reader.read_images_path(config["gallery_path"])
+    path_to_embs = reader.read_path(config["path_to_save_embs"])
     
-    for class_name, img_path in path_data:
-        cv2.imread(img_path)
+
+    obtained_classes = []
+    data_to_feed_clustering = {}
+    for class_name, data_path in path_to_embs:
+        if not(class_name in obtained_classes):
+            obtained_classes.append(class_name)
+            data_to_feed_clustering[class_name] = []
+        else:
+            emb = reader.read_npy(data_path)
+            # emb = emb[np.newaxis, :]
+            data_to_feed_clustering[class_name].append(emb)
+    
+        
+    for class_name, embs in data_to_feed_clustering.items():
+        print(np.array(embs).shape)
+        medoids = clustering.get_medoids(np.array(embs))
+        # print(medoids.shape)
+
+
+
+
+
+
 
         
 
