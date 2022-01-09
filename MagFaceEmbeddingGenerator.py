@@ -19,7 +19,7 @@ class MagFaceEmbeddingGenerator:
                         mean=[0., 0., 0.],
                         std=[1., 1., 1.]),
         ])
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         features_model = iresnet.iresnet100(
             pretrained=False,
@@ -29,8 +29,7 @@ class MagFaceEmbeddingGenerator:
 
     def __load_dict_inf(self, config, model):
         if os.path.isfile(config["magface_pretrained_path"]):
-            print('=> Magface pretrained model is loaded successfully')
-
+            
             if config["cpu_mode"]:
                 checkpoint = torch.load(config["magface_pretrained_path"], map_location=torch.device("cpu"))
             else:
@@ -39,11 +38,11 @@ class MagFaceEmbeddingGenerator:
             model_dict = model.state_dict()
             model_dict.update(_state_dict)
             model.load_state_dict(model_dict)
-            # delete to release more space
             del checkpoint
             del _state_dict
+            print("=> Magface pretrained model is loaded successfully")
         else:
-            sys.exit("=> No checkpoint found at '{}'".format(args.resume))
+            sys.exit(f"=> No checkpoint found at: {config['magface_pretrained_path']}")
         return model
 
 
