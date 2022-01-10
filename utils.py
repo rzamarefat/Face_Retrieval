@@ -15,7 +15,8 @@ class Clustering:
             self.KMedoids = KMedoids(n_clusters=self.k, random_state=0)
 
     def get_medoids(self, data_for_one_class):
-        return self.KMedoids.fit(data_for_one_class)
+        kmedoids = self.KMedoids.fit(data_for_one_class)
+        return kmedoids.labels_
 
     @staticmethod
     def save_medoid(medoid, path_to_save):
@@ -75,9 +76,8 @@ if __name__ == "__main__":
     
         
     for class_name, embs in data_to_feed_clustering.items():
-        print(np.array(embs).shape)
         medoids = clustering.get_medoids(np.array(embs))
-        # print(medoids.shape)
+        print(medoids)
 
 
 
