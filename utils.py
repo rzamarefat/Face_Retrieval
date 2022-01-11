@@ -15,12 +15,14 @@ class Clustering:
             self.KMedoids = KMedoids(n_clusters=self.k, random_state=0)
 
     def get_medoids(self, data_for_one_class):
-        kmedoids = self.KMedoids.fit(data_for_one_class)
-        return kmedoids.labels_
+        kmed = KMedoids(n_clusters=self.k, metric='euclidean', method='alternate', init='heuristic', max_iter=300, random_state=4)
+        kmed.fit(data_for_one_class)
+        
+        return kmed.cluster_centers_
 
     @staticmethod
     def save_medoid(medoid, path_to_save):
-        np.save(medoid, path_to_save)
+        np.save(path_to_save, medoid)
 
 
 class Reader:
@@ -77,7 +79,15 @@ if __name__ == "__main__":
         
     for class_name, embs in data_to_feed_clustering.items():
         medoids = clustering.get_medoids(np.array(embs))
-        print(medoids)
+        
+        if not(os.path.isdir(os.path.join(config["medoids_storage_path"], class_name))): 
+            os.mkdir(os.path.join(config["medoids_storage_path"], class_name))
+        
+        
+        for index, m in enumerate(medoids):
+            abs_path_to_save = os.path.join(config["medoids_storage_path"], class_name, f"{index}.npy")
+            clustering.save_medoid(m, abs_path_to_save)
+
 
 
 
