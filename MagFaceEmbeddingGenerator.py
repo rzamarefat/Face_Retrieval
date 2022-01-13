@@ -115,11 +115,4 @@ if __name__ == "__main__":
             img = cv2.resize(img, (112, 112))
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-            magface_embedding_generator.generate_embeddings(img, abs_path_to_save)
-
-
-    
-        
-
-        
-        
+            magface_embedding_generator.generate_embeddings(img, abs_path_to_save)    
