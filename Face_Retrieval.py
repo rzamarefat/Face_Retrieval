@@ -117,7 +117,7 @@ class FaceRetrieval:
 if __name__ == "__main__":
     face_retriever = FaceRetrieval()
 
-    # face_retriever.do_preprocessing()
-    path_to_target_img = "/mnt/829A20D99A20CB8B/projects/github_projects/Face_Retrieval/ATENEH.png"
+    face_retriever.do_preprocessing()
+    path_to_target_img = "/mnt/829A20D99A20CB8B/projects/github_projects/Face_Retrieval/test_imgs/TEST_BRAD_PIT.png"
 
     face_retriever.retrieve_face(path_to_face=path_to_target_img)
