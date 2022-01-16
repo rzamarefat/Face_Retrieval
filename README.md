@@ -9,6 +9,6 @@ Below, you can see the whole pipeline of this retrieval system
 - **Usage**
 
 - **References**
---This project is heavily dependant on the following academic work:
+-- This project is heavily dependant on the following academic work:
 MagFace: https://github.com/IrvingMeng/MagFace
 
