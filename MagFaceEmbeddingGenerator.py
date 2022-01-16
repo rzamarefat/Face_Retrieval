@@ -92,9 +92,11 @@ You have probably forgotten to read the images as np.array")
 
         img = self.__preprocess_data(img)
         generated_embs = self.features_model(img)
+        generated_embs = generated_embs[0].detach().cpu()
+        if abs_path_to_save_emb:
+            self.__save_emb(generated_embs, abs_path_to_save_emb)
 
-        self.__save_emb(generated_embs[0].detach().cpu(), abs_path_to_save_emb)
-        
+        return generated_embs 
 
     def __save_emb(self, emb, abs_path_to_save_emb):
         np.save(abs_path_to_save_emb.replace(abs_path_to_save_emb.split(".")[-1], "npy"), emb)

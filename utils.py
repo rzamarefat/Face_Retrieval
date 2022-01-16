@@ -5,9 +5,10 @@ import numpy as np
 from config import config
 import cv2
 from scipy import spatial
+import shutil as shu
 
 class Clustering:
-    def __init__(self, k=3, type="kmedoids", save_mode="True"):
+    def __init__(self, k, type="kmedoids", save_mode="True"):
         self.k = k
         self.type = type
         self.save_mode = save_mode
@@ -62,6 +63,27 @@ class Reader:
         return data
 
 
+    def check_and_make_path(self, parent_folder, folder_to_make):
+        path_to_make = os.path.join(parent_folder, folder_to_make)
+
+        
+        if os.path.isdir(path_to_make) and len(os.listdir(path_to_make)) == 0:  
+            shu.rmtree(path_to_make, ignore_errors=True)
+
+        os.mkdir(path_to_make)
+
+
+class Preprocess:
+    def __init__(self) -> None:
+        self.target_size_for_magface = 112, 112
+
+    def resize_img(self, img):
+        return cv2.resize(img, self.target_size_for_magface)
+
+    def show_img(self, img):
+        cv2.imshow("Image", img)
+        cv2.waitKey(0)
+
 
 
 if __name__ == "__main__":
@@ -69,31 +91,31 @@ if __name__ == "__main__":
     clustering = Clustering(k=3)
     
     reader = Reader()
-    # path_to_embs = reader.read_path(config["path_to_save_embs"])
+    path_to_embs = reader.read_path(config["path_to_save_embs"])
     
 
-    # obtained_classes = []
-    # data_to_feed_clustering = {}
-    # for class_name, data_path in path_to_embs:
-    #     if not(class_name in obtained_classes):
-    #         obtained_classes.append(class_name)
-    #         data_to_feed_clustering[class_name] = []
-    #     else:
-    #         emb = reader.read_npy(data_path)
-    #         # emb = emb[np.newaxis, :]
-    #         data_to_feed_clustering[class_name].append(emb)
+    obtained_classes = []
+    data_to_feed_clustering = {}
+    for class_name, data_path in path_to_embs:
+        if not(class_name in obtained_classes):
+            obtained_classes.append(class_name)
+            data_to_feed_clustering[class_name] = []
+        else:
+            emb = reader.read_npy(data_path)
+            # emb = emb[np.newaxis, :]
+            data_to_feed_clustering[class_name].append(emb)
     
         
-    # for class_name, embs in data_to_feed_clustering.items():
-    #     medoids = clustering.get_medoids(np.array(embs))
+    for class_name, embs in data_to_feed_clustering.items():
+        medoids = clustering.get_medoids(np.array(embs))
         
-    #     if not(os.path.isdir(os.path.join(config["medoids_storage_path"], class_name))): 
-    #         os.mkdir(os.path.join(config["medoids_storage_path"], class_name))
+        if not(os.path.isdir(os.path.join(config["medoids_storage_path"], class_name))): 
+            os.mkdir(os.path.join(config["medoids_storage_path"], class_name))
         
         
-    #     for index, m in enumerate(medoids):
-    #         abs_path_to_save = os.path.join(config["medoids_storage_path"], class_name, f"{index}.npy")
-    #         clustering.save_medoid(m, abs_path_to_save)
+        for index, m in enumerate(medoids):
+            abs_path_to_save = os.path.join(config["medoids_storage_path"], class_name, f"{index}.npy")
+            clustering.save_medoid(m, abs_path_to_save)
 
 
     src_emb = np.load("/mnt/829A20D99A20CB8B/projects/github_projects/Face_Retrieval/kmedoids/A/0.npy")
