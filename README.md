@@ -6,13 +6,13 @@
   Below, you can see the whole pipeline of this retrieval system
   ![Screenshot from 2022-01-08 16-38-55](https://user-images.githubusercontent.com/79300456/148645364-1e6bb06d-b252-41c2-a0e4-6abaa00281e3.png)
 
-- **Explanation**
+- **Explanation**  
 In this section I am going to explain all the steps within this pipeline. Firstly, the embeddings of face images in the gallery databse is extracted with the help of MagFace which is a robust Face embedding generator. Then, the K-medoids of these embeddings are found and saved to the database of the medoids. When a query face image is fed to the pipeline, the embedding of this face image is extracted, and after that the similarity measure of the query embedding with all the K-Medoids of each class within our gallery is calculated using COSINE Similarity. Then, the top class with the most average of similarity is recognised. Finally, the similarity module is run on all the data points within the recognised class with the aim of finding the most to least similar images of the recognised person. 
-- **Usage**
-In order to use this repo, you need to take the following steps:
-0 - Step zero is to download the pretrained model of MagFace(Reference is provided below). The link for downloading it is:
-[MagFace Pretrained Model](https://drive.google.com/file/d/1Bd87admxOZvbIOAyTkGEntsEz3fyMt7H/view?usp=sharing)
-1- Put the face images inside the directory named gallery. For each person a seperate folder must be created. For instance:
+- **Usage**  
+In order to use this repo, you need to take the following steps:  
+0 - Step zero is to download the pretrained model of MagFace(Reference is provided below). The link for downloading it is:  
+[MagFace Pretrained Model](https://drive.google.com/file/d/1Bd87admxOZvbIOAyTkGEntsEz3fyMt7H/view?usp=sharing)  
+1- Put the face images inside the directory named gallery. For each person a seperate folder must be created. For instance:  
 ```
 gallery
 -Person_One
