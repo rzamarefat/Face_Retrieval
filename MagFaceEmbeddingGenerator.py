@@ -74,7 +74,6 @@ class MagFaceEmbeddingGenerator:
         img = np.array(img, dtype=np.float32)
         empty_tensor = np.zeros((img.shape[0], img.shape[1], img.shape[2]), dtype=np.float32)
         img = np.array([img, empty_tensor])
-
         img_tensor = self.transforms(torch.from_numpy(img).permute(0, 3, 1, 2))
 
         img_tensor = img_tensor.to(self.device)

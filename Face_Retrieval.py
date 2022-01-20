@@ -96,23 +96,6 @@ class FaceRetrieval:
         target_person = max(history_of_mean_distance_for_each_class, key=history_of_mean_distance_for_each_class.get)
 
         print(target_person)
-            
-
-            
-
-
-
-
-
-
-
-
-
-        
-
-
-            
-
 
 if __name__ == "__main__":
     face_retriever = FaceRetrieval()
